@@ -1,0 +1,189 @@
+[
+    {
+        "name": "KJ TRANSPORT",
+        "warehouses": [
+            "OPOLE",
+            "RUDA ŚLĄSKA",
+            "BYDGOSZCZ",
+            "CZECHOWICE DZIEDZICE"
+        ],
+        "maxWeight": 1500,
+        "rates": {
+            "domestic": {
+                "rate_per_point_up_to_200km": 70,
+                "rate_per_km_over_200km": 2.1
+            },
+            "international": {
+                "rate_per_km": 2.5,
+                "maxWeight": 1000
+            }
+        },
+        "warehouseSurcharges": {
+            "OPOLE": 0,
+            "RUDA ŚLĄSKA": 0,
+            "BYDGOSZCZ": 0,
+            "CZECHOWICE DZIEDZICE": 0
+        }
+    },
+    {
+        "name": "TRI-TRANS",
+        "warehouses": [
+            "OPOLE",
+            "RUDA ŚLĄSKA"
+        ],
+        "maxWeight": 1700,
+        "rates": {
+            "domestic": {
+                "rate_per_km": 2.26,
+                "rate_per_100km": 0
+            },
+            "international": null
+        },
+        "warehouseSurcharges": {
+            "OPOLE": 0,
+            "RUDA ŚLĄSKA": 0,
+            "BYDGOSZCZ": 0,
+            "CZECHOWICE DZIEDZICE": 0
+        }
+    },
+    {
+        "name": "TOMANEK",
+        "warehouses": [
+            "RUDA ŚLĄSKA"
+        ],
+        "maxWeight": 1700,
+        "rates": {
+            "domestic": {
+                "rate_per_km": 1.95,
+                "rate_per_100km": 0
+            },
+            "international": {
+                "rate_per_km": 1.98,
+                "rate_per_100km": 0,
+                "maxWeight": 1300
+            }
+        },
+        "warehouseSurcharges": {
+            "OPOLE": 0,
+            "RUDA ŚLĄSKA": 0,
+            "BYDGOSZCZ": 0,
+            "CZECHOWICE DZIEDZICE": 0
+        }
+    },
+    {
+        "name": "APEK",
+        "warehouses": [
+            "OPOLE",
+            "RUDA ŚLĄSKA",
+            "BYDGOSZCZ",
+            "CZECHOWICE DZIEDZICE"
+        ],
+        "maxWeight": 1700,
+        "rates": {
+            "domestic": {
+                "matrix": {
+                    "do 200 KM": {
+                        "do 10 punktów dostawy": 1050,
+                        "11 - 15 punktów dostawy": 1150,
+                        "16 - 20 punktów dostawy": 1350,
+                        "powyżej 20 punktów dostawy": 1650
+                    },
+                    "201 - 300 KM": {
+                        "do 10 punktów dostawy": 1250,
+                        "11 - 15 punktów dostawy": 1350,
+                        "16 - 20 punktów dostawy": 1550,
+                        "powyżej 20 punktów dostawy": 1850
+                    },
+                    "301 - 400 KM": {
+                        "do 10 punktów dostawy": 1450,
+                        "11 - 15 punktów dostawy": 1550,
+                        "16 - 20 punktów dostawy": 1750,
+                        "powyżej 20 punktów dostawy": 2050
+                    },
+                    "401 - 500 KM": {
+                        "do 10 punktów dostawy": 1550,
+                        "11 - 15 punktów dostawy": 1650,
+                        "16 - 20 punktów dostawy": 1850,
+                        "powyżej 20 punktów dostawy": 2150
+                    },
+                    "501 - 600 KM": {
+                        "do 10 punktów dostawy": 1650,
+                        "11 - 15 punktów dostawy": 1750,
+                        "16 - 20 punktów dostawy": 1950,
+                        "powyżej 20 punktów dostawy": 2250
+                    }
+                },
+                "maxWeight": 1700
+            },
+            "international": {
+                "matrix": {
+                    "do 200 KM": {
+                        "do 10 punktów dostawy": 1300,
+                        "11 - 15 punktów dostawy": 1400,
+                        "16 - 20 punktów dostawy": 1600,
+                        "powyżej 20 punktów dostawy": 1700
+                    },
+                    "201 - 300 KM": {
+                        "do 10 punktów dostawy": 1500,
+                        "11 - 15 punktów dostawy": 1600,
+                        "16 - 20 punktów dostawy": 1800,
+                        "powyżej 20 punktów dostawy": 1900
+                    },
+                    "powyżej 300 KM": {
+                        "do 10 punktów dostawy": 1700,
+                        "11 - 15 punktów dostawy": 1800,
+                        "16 - 20 punktów dostawy": 2000,
+                        "powyżej 20 punktów dostawy": 2100
+                    }
+                },
+                "maxWeight": 1500
+            }
+        },
+        "warehouseSurcharges": {
+            "OPOLE": 0,
+            "RUDA ŚLĄSKA": 0,
+            "BYDGOSZCZ": 0,
+            "CZECHOWICE DZIEDZICE": 0
+        }
+    },
+    {
+        "name": "DAM-CARS",
+        "warehouses": [
+            "BYDGOSZCZ"
+        ],
+        "maxWeight": 1700,
+        "rates": {
+            "domestic": {
+                "rate_per_km": 1.95,
+                "rate_per_100km": 0
+            },
+            "international": null
+        },
+        "warehouseSurcharges": {
+            "OPOLE": 0,
+            "RUDA ŚLĄSKA": 0,
+            "BYDGOSZCZ": 0,
+            "CZECHOWICE DZIEDZICE": 0
+        }
+    },
+    {
+        "name": "Nęcka",
+        "warehouses": [
+            "RUDA ŚLĄSKA"
+        ],
+        "maxWeight": 1700,
+        "rates": {
+            "domestic": {
+                "rate_per_km": 2.2,
+                "rate_per_100km": 0
+            },
+            "international": null
+        },
+        "warehouseSurcharges": {
+            "OPOLE": 0,
+            "RUDA ŚLĄSKA": 0,
+            "BYDGOSZCZ": 0,
+            "CZECHOWICE DZIEDZICE": 0
+        }
+    }
+]

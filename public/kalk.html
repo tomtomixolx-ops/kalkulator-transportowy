@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kosztów Transportu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .highlight {
+            border-color: #e30613;
+            box-shadow: 0 0 15px rgba(227, 6, 19, 0.3);
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .collapsible-header {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .collapsible-content {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            max-height: 0;
+            overflow-y: auto;
+        }
+        .collapsible-content.open {
+            display: block;
+            max-height: 1000px;
+        }
+        .arrow-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+        .arrow-icon.rotated {
+            transform: rotate(90deg);
+        }
+        .notification {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+        }
+        .notification.show {
+            opacity: 1;
+        }
+        .logo {
+            width: 206px;
+            height: 55px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div id="notification" class="notification"></div>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+
+        <header class="text-center mb-8 flex flex-col items-center">
+            <div class="logo-container mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="206.002" height="55.055" viewBox="0 0 206.002 55.055">
+                    <g id="latex_logo" transform="translate(-2.476 0.066)">
+                        <path id="Path_7" data-name="Path 7" d="M302.249,26.7c-.169,0,.113.056,0,0a2.492,2.492,0,0,1-2-1c-.225-.338-.887-.55-1-1h1c.056.169-.113-.113,0,0a3.573,3.573,0,0,0,2,1c.169.056-.113.056,0,0a6.363,6.363,0,0,0,4-2c.169-.225-.113-.719,0-1,.113-.169-.056.169,0,0l1-1a5.934,5.934,0,0,0,0,1h0c-.056.338.113-.281,0,0s-.831.719-1,1c-1.069,1.576-2.537,2.887-4,3Z" transform="translate(-131.773 -9.715)" fill="#e30613"/>
+                        <path id="Path_8" data-name="Path 8" d="M148.353,67.165h-9l3-25h-15l-3-8h43l-1,8h-14Z" transform="translate(-54.877 -15.176)" fill="#1d1d1b"/>
+                        <path id="Path_9" data-name="Path 9" d="M91.324,34.165h-12l-23,33h11l4-6h19l3,6h10l-12-33Zm-15,19,6-9,2-2,4,11Z" transform="translate(-24.848 -15.176)" fill="#1d1d1b"/>
+                        <path id="Path_10" data-name="Path 10" d="M15.4,59.165h20l-5,8H4.4l5-33h10Z" transform="translate(-1.924 -15.176)" fill="#1d1d1b"/>
+                        <path id="Path_11" data-name="Path 11" d="M306.727,11.027c-.844-1.013-1.537-1.944-3-2a2.977,2.977,0,0,0-1,0c-.45.056-1.493.887-2,1a8.932,8.932,0,0,0-5,4c-.338.45-.719.493-1,1-.225.563-.831,1.437-1,2a2.978,2.978,0,0,0,0,1,5.781,5.781,0,0,0,1,4,5.971,5.971,0,0,0,4,2,2.977,2.977,0,0,0,1,0c.563-.056.437.169,1,0a12.838,12.838,0,0,0,6-5c.338-.507-.225-.437,0-1a16.561,16.561,0,0,0,1-2h0c.056-.394-.056-.662,0-1a6.269,6.269,0,0,0-1-4Zm0,4c-.056.338.056.662,0,1h0c-.113.507.169,1.55,0,2-.225.45-.719.55-1,1a10.409,10.409,0,0,1-5,4c-.507.169-.493-.056-1,0a2.983,2.983,0,0,1-1,0,5.12,5.12,0,0,1-3-2,4.05,4.05,0,0,1-1-3c.056-.338-.056-.719,0-1h0c.113-.45.831-.55,1-1,.225-.45.719-1.55,1-2a6.845,6.845,0,0,1,4-3c.45-.169,1.494-1,2-1,.281-.056-.281,0,0,0a5.3,5.3,0,0,1,3,2,3.47,3.47,0,0,1,1,3Z" transform="translate(-129.25 -4.038)" fill="#1d1d1b"/>
+                        <path id="Path_12" data-name="Path 12" d="M208.446,59.209l1-5h19l1-7h-19l1-5h27a13.265,13.265,0,0,1-1-2,16.385,16.385,0,0,1-1-6h-34l-5,33h32c1.351-2.589,2.424-5.58,4-8Z" transform="translate(-86.97 -15.22)" fill="#1d1d1b"/>
+                        <path id="Path_13" data-name="Path 13" d="M284.913,40.962c4.221-2.686,8.411-4.978,11-8a16.691,16.691,0,0,1-2-8,11.863,11.863,0,0,1,0-2c-4.277,6.323-10.286,9.832-14,10-4,.224-6.931-1.509-8-8-2.983.224-6.074.776-9,1-.225,3.693-.069,5.09,1,8a18.618,18.618,0,0,0,5,8c-3.6,2.406-7.242,4.7-10,8-.732.9-1.212,2.713-2,4-1.576,2.406-2.649,5.426-4,8-.563,1.119-1.55,2.049-2,3l10-1c3.939-8.729,9.892-13.384,14-14,4.165-.671,10.45,4.879,10,14l9-1a20.9,20.9,0,0,0-1-12,27.506,27.506,0,0,0-8-10Z" transform="translate(-110.437 -9.973)" fill="#e30613"/>
+                        <path id="Path_14" data-name="Path 14" d="M344.141-.011c-3.6,0-8.467-.407-11,1-3.883,2.139-6,8.879-6,14,0,5.346,2.173,10.03,6,12,1.8.9,8.2.394,10,0,4.333-1.013,8.775-7.065,9-15,.113-7.935-3.835-12-8-12Zm-8,14a23.861,23.861,0,0,0-8,0c.45-5.853,2.9-9.974,6-12,1.351-.9,6.355-1,9-1-4.9,2.251-7,7.6-7,13Zm13-1c-.45,5.065-2.355,9.887-5,10s-4.563-4.048-4-9c.563-5.009,3.411-8.887,6-9,2.533-.169,3.506,2.935,3,8Z" transform="translate(-143.665 0)" fill="#1d1d1b"/>
+                    </g>
+                </svg>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Kalkulator Kosztów Transportu</h1>
+            <p class="text-slate-600 mt-2">Wprowadź dane ładunku, aby znaleźć najtańszego przewoźnika.</p>
+        </header>
+
+        <main class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
+
+            <div class="flex justify-center mb-6 space-x-2 sm:space-x-4">
+                <button id="show-calculator-btn" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-red-600 text-white shadow">Kalkulator</button>
+                <button id="show-settings-btn" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-slate-200 text-slate-700 hover:bg-slate-300">Edytor Stawek</button>
+                <button id="show-summary-btn" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-slate-200 text-slate-700 hover:bg-slate-300">Podsumowanie stawek</button>
+            </div>
+            
+            <div id="calculator-section" class="section active">
+                <div id="calculator-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                    <div>
+                        <label for="points" class="block text-sm font-medium text-slate-700 mb-1">Ilość punktów dostawy</label>
+                        <input type="number" id="points" min="1" placeholder="np. 5" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 transition">
+                    </div>
+
+                    <div>
+                        <label for="weight" class="block text-sm font-medium text-slate-700 mb-1">Waga ładunku (kg)</label>
+                        <input type="number" id="weight" min="1" placeholder="np. 1200" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 transition">
+                    </div>
+
+                    <div>
+                        <label for="distance" class="block text-sm font-medium text-slate-700 mb-1">Długość trasy (km)</label>
+                        <input type="number" id="distance" min="1" placeholder="np. 250" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 transition">
+                    </div>
+
+                    <div>
+                        <label for="warehouse" class="block text-sm font-medium text-slate-700 mb-1">Magazyn wyjściowy</label>
+                        <select id="warehouse" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 transition bg-white">
+                            <option value="OPOLE">OPOLE</option>
+                            <option value="RUDA ŚLĄSKA">RUDA ŚLĄSKA</option>
+                            <option value="BYDGOSZCZ">BYDGOSZCZ</option>
+                            <option value="CZECHOWICE DZIEDZICE">CZECHOWICE DZIEDZICE</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="route-type" class="block text-sm font-medium text-slate-700 mb-1">Rodzaj trasy</label>
+                        <select id="route-type" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 transition bg-white">
+                            <option value="domestic">Krajowa</option>
+                            <option value="international">Zagraniczna</option>
+                        </select>
+                    </div>
+                    
+                    <div class="md:col-span-2 mt-4">
+                        <button id="calculate-btn" class="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-red-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition-transform transform hover:scale-105">
+                            Oblicz Koszty
+                        </button>
+                    </div>
+                </div>
+
+                <div id="results-container" class="mt-8 hidden">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">Wyniki Kalkulacji</h2>
+                    <div id="results-list" class="space-y-4">
+                    </div>
+                </div>
+                
+                <div id="error-message" class="mt-6 text-center text-red-600 font-medium hidden"></div>
+            </div>
+
+            <div id="settings-section" class="section">
+                <div class="p-6 md:p-8 mt-6 bg-slate-100 rounded-2xl shadow-xl">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">Edytor Stawek</h2>
+                    <p class="text-sm text-slate-600 mb-4 text-center">Poniżej możesz edytować stawki, ładowność oraz dostępne magazyny dla każdego przewoźnika.</p>
+                    <div id="settings-list" class="space-y-6">
+                    </div>
+                    <div class="mt-8 flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button id="reset-settings-btn" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors shadow-md hover:shadow-lg">Resetuj do domyślnych</button>
+                        <button id="save-settings-btn" class="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors shadow-md hover:shadow-lg">Zapisz Zmiany</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="summary-section" class="section">
+                <div class="p-6 md:p-8 mt-6 bg-slate-100 rounded-2xl shadow-xl">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">Podsumowanie stawek</h2>
+                    <div id="summary-table-container"></div>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <footer class="mt-8 mb-4 text-center text-xs text-slate-500">
+        <p>&copy; 2025 Created by Michał Gala & Tomasz Pasznik</p>
+        <p>Dział Transportu</p>
+    </footer>
+
+    <script>
+        const allWarehouses = ["OPOLE", "RUDA ŚLĄSKA", "BYDGOSZCZ", "CZECHOWICE DZIEDZICE"];
+
+        let carriersData;
+        let defaultCarriersData;
+
+        // Funkcje do komunikacji z API
+        async function loadData() {
+            try {
+                const response = await fetch('/api/carriers');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                carriersData = data;
+            } catch (error) {
+                console.error('Błąd podczas ładowania danych z serwera:', error);
+                showNotification("Błąd ładowania danych z serwera. Spróbuj odświeżyć stronę.", "info");
+                // Fallback to initial data if server fails to provide any
+                carriersData = JSON.parse(JSON.stringify(defaultCarriersData));
+            }
+        }
+
+        async function saveData(data) {
+            try {
+                const response = await fetch('/api/carriers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                showNotification("Dane zostały zapisane!", "success");
+            } catch (error) {
+                console.error('Błąd podczas zapisywania danych na serwerze:', error);
+                showNotification("Błąd podczas zapisu danych na serwerze.", "info");
+            }
+        }
+
+        // Pozostałe funkcje kalkulatora (z Twojego pliku)
+
+        function calculateCost(carrier, points, weight, distance, routeType, warehouse) {
+            // Walidacja wagi ładunku
+            if (routeType === 'domestic' && weight > carrier.maxWeight) {
+                return { error: `Przekroczona ładowność (max. ${carrier.maxWeight} kg).` };
+            }
+            if (routeType === 'international' && carrier.rates.international && weight > carrier.rates.international.maxWeight) {
+                return { error: `Przekroczona ładowność na trasie zagranicznej (max. ${carrier.rates.international.maxWeight} kg).` };
+            }
+            if (routeType === 'international' && !carrier.rates.international) {
+                return { error: "Nie obsługuje tras zagranicznych." };
+            }
+
+            let baseCost = 0;
+            let surcharge100km = 0;
+            let calculationDetails = [];
+            const surcharge = carrier.warehouseSurcharges[warehouse] || 0;
+
+            // Logika dla tras zagranicznych
+            if (routeType === 'international') {
+                if (carrier.name === "APEK") {
+                    const kmRange = getApekKmRange(distance, routeType);
+                    const pointsRange = getApekPointsRange(points, routeType);
+                    
+                    baseCost = carrier.rates.international.matrix[kmRange][pointsRange];
+                    calculationDetails.push(`Stawka: ${baseCost.toFixed(2)} zł (dla ${kmRange}, ${pointsRange})`);
+                } else if (carrier.rates.international) {
+                    baseCost = distance * carrier.rates.international.rate_per_km;
+                    calculationDetails.push(`Stawka: ${distance} km x ${carrier.rates.international.rate_per_km} zł/km = ${baseCost.toFixed(2)} zł`);
+
+                    if (carrier.rates.international.rate_per_100km > 0) {
+                        const kmBlocks = Math.floor(distance / 100);
+                        surcharge100km = kmBlocks * carrier.rates.international.rate_per_100km;
+                        calculationDetails.push(`Opłata za każde 100 km: ${kmBlocks} x ${carrier.rates.international.rate_per_100km} zł = ${surcharge100km.toFixed(2)} zł`);
+                    }
+                }
+            }
+
+            // Logika dla tras krajowych
+            if (routeType === 'domestic') {
+                if (carrier.name === "KJ TRANSPORT") {
+                    if (distance <= 200) {
+                         baseCost = points * carrier.rates.domestic.rate_per_point_up_to_200km;
+                         calculationDetails.push(`Stawka: ${points} pkt x ${carrier.rates.domestic.rate_per_point_up_to_200km} zł/punkt = ${baseCost.toFixed(2)} zł`);
+                    } else { // Trasa powyzej 200 km
+                        baseCost = distance * carrier.rates.domestic.rate_per_km_over_200km;
+                        calculationDetails.push(`Stawka: ${distance} km x ${carrier.rates.domestic.rate_per_km_over_200km} zł/km = ${baseCost.toFixed(2)} zł`);
+                    }
+                } else if (carrier.name === "APEK") {
+                    const kmRange = getApekKmRange(distance, routeType);
+                    const pointsRange = getApekPointsRange(points, routeType);
+                    
+                    if (carrier.rates.domestic.matrix[kmRange] && carrier.rates.domestic.matrix[kmRange][pointsRange]) {
+                        baseCost = carrier.rates.domestic.matrix[kmRange][pointsRange];
+                        calculationDetails.push(`Stawka: ${baseCost.toFixed(2)} zł (dla ${kmRange}, ${pointsRange})`);
+                    } else {
+                        return { error: "Brak zdefiniowanych stawek dla podanej trasy i ilości punktów." };
+                    }
+                } else if (carrier.rates.domestic && carrier.rates.domestic.rate_per_km) {
+                     baseCost = distance * carrier.rates.domestic.rate_per_km;
+                     calculationDetails.push(`Stawka: ${distance} km x ${carrier.rates.domestic.rate_per_km} zł/km = ${baseCost.toFixed(2)} zł`);
+                     
+                    if (carrier.rates.domestic.rate_per_100km > 0) {
+                        const kmBlocks = Math.floor(distance / 100);
+                        surcharge100km = kmBlocks * carrier.rates.domestic.rate_per_100km;
+                        calculationDetails.push(`Opłata za każde 100 km: ${kmBlocks} x ${carrier.rates.domestic.rate_per_100km} zł = ${surcharge100km.toFixed(2)} zł`);
+                    }
+
+                } else {
+                    return { error: "Brak zdefiniowanych stawek dla podanej trasy." };
+                }
+            }
+            
+            // Doliczenie dodatkowej stawki za magazyn
+            const finalCost = baseCost + surcharge + surcharge100km;
+            if (surcharge > 0) {
+                calculationDetails.push(`Opłata dodatkowa za magazyn (${warehouse}): ${surcharge.toFixed(2)} zł`);
+            }
+            
+            calculationDetails.push(`Suma: ${finalCost.toFixed(2)} zł`);
+
+            return { cost: finalCost, details: calculationDetails };
+        }
+
+        function getApekKmRange(km, routeType) {
+            if (routeType === 'domestic') {
+                if (km <= 200) {
+                    return 'do 200 KM';
+                } else if (km <= 300) {
+                    return '201 - 300 KM';
+                } else if (km <= 400) {
+                    return '301 - 400 KM';
+                } else if (km <= 500) {
+                    return '401 - 500 KM';
+                } else if (km <= 600) {
+                    return '501 - 600 KM';
+                } else {
+                    return 'Nie znaleziono zakresu KM';
+                }
+            } else { // international
+                if (km <= 200) {
+                    return 'do 200 KM';
+                } else if (km <= 300) {
+                    return '201 - 300 KM';
+                } else {
+                    return 'powyżej 300 KM';
+                }
+            }
+        }
+        
+        function getApekPointsRange(points, routeType) {
+            if (routeType === 'domestic' || routeType === 'international') {
+                if (points <= 10) {
+                    return 'do 10 punktów dostawy';
+                } else if (points <= 15) {
+                    return '11 - 15 punktów dostawy';
+                } else if (points <= 20) {
+                    return '16 - 20 punktów dostawy';
+                } else {
+                    return 'powyżej 20 punktów dostawy';
+                }
+            } else {
+                 return 'Nie znaleziono zakresu punktów';
+            }
+        }
+
+        const sections = {
+            calculator: document.getElementById('calculator-section'),
+            settings: document.getElementById('settings-section'),
+            summary: document.getElementById('summary-section')
+        };
+        const buttons = {
+            calculator: document.getElementById('show-calculator-btn'),
+            settings: document.getElementById('show-settings-btn'),
+            summary: document.getElementById('show-summary-btn')
+        };
+
+        function showSection(sectionName) {
+            for (const key in sections) {
+                sections[key].classList.remove('active');
+                buttons[key].classList.remove('bg-red-600', 'text-white', 'shadow');
+                buttons[key].classList.add('bg-slate-200', 'text-slate-700');
+            }
+            sections[sectionName].classList.add('active');
+            buttons[sectionName].classList.add('bg-red-600', 'text-white', 'shadow');
+            buttons[sectionName].classList.remove('bg-slate-200', 'text-slate-700');
+        }
+
+        buttons.calculator.addEventListener('click', () => showSection('calculator'));
+        buttons.settings.addEventListener('click', () => {
+            renderSettings();
+            showSection('settings');
+        });
+        buttons.summary.addEventListener('click', () => {
+            renderSummary();
+            showSection('summary');
+        });
+
+        const calculateBtn = document.getElementById('calculate-btn');
+        const resultsContainer = document.getElementById('results-container');
+        const resultsList = document.getElementById('results-list');
+        const errorMessage = document.getElementById('error-message');
+        const settingsList = document.getElementById('settings-list');
+        const saveSettingsBtn = document.getElementById('save-settings-btn');
+        const resetSettingsBtn = document.getElementById('reset-settings-btn');
+        const summaryTableContainer = document.getElementById('summary-table-container');
+        const notificationElement = document.getElementById('notification');
+        
+        /**
+         * Displays a notification pop-up.
+         * @param {string} message The message to display.
+         * @param {string} type The type of notification ('success' or 'info').
+         */
+        function showNotification(message, type) {
+            // Remove existing color classes
+            notificationElement.className = 'notification';
+
+            // Set message and add color class based on type
+            notificationElement.textContent = message;
+            if (type === 'success') {
+                notificationElement.classList.add('bg-green-500', 'text-white');
+            } else if (type === 'info') {
+                notificationElement.classList.add('bg-blue-500', 'text-white');
+            }
+
+            // Show the notification
+            notificationElement.classList.add('show');
+
+            // Hide the notification after 3 seconds
+            setTimeout(() => {
+                notificationElement.classList.remove('show');
+            }, 3000);
+        }
+
+        function renderSettings() {
+            settingsList.innerHTML = '';
+            carriersData.forEach(carrier => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl border border-slate-300 shadow-sm";
+                card.innerHTML = `
+                    <div class="collapsible-header">
+                        <h3 class="font-bold text-base text-slate-800">${carrier.name}</h3>
+                        <svg class="arrow-icon w-4 h-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                    <div class="collapsible-content">
+                         <div class="mt-4 p-4 border rounded-lg bg-slate-50">
+                            <h4 class="font-semibold text-sm text-slate-700 mb-2">Dostępne magazyny wyjściowe</h4>
+                            <div class="flex flex-col space-y-2">
+                                ${allWarehouses.map(warehouse => `
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" class="form-checkbox h-4 w-4 text-red-600 rounded"
+                                            value="${warehouse}"
+                                            data-carrier="${carrier.name}"
+                                            data-warehouse-checkbox
+                                            ${carrier.warehouses.includes(warehouse) ? 'checked' : ''}>
+                                        <span class="ml-2 text-sm text-slate-700">${warehouse}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ${generateRateInputs(carrier)}
+                        <div class="mt-4 p-4 border rounded-lg bg-slate-50">
+                            <h4 class="font-semibold text-sm text-slate-700 mb-2">Dodatkowe opłaty za magazyny</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                ${allWarehouses.map(wh => `
+                                    <div>
+                                        <label for="${carrier.name}-${wh}-surcharge" class="block text-sm font-medium text-slate-700 mb-1">Dopłata dla ${wh} (zł):</label>
+                                        <input type="number" step="any" id="${carrier.name}-${wh}-surcharge" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:ring-1 focus:ring-red-600" value="${carrier.warehouseSurcharges[wh]}" data-carrier="${carrier.name}" data-surcharge-key="${wh}">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                settingsList.appendChild(card);
+            });
+            
+            // Set up event listeners for collapsing sections
+            document.querySelectorAll('.collapsible-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const arrow = header.querySelector('.arrow-icon');
+                    content.classList.toggle('open');
+                    arrow.classList.toggle('rotated');
+                });
+            });
+        }
+
+        function generateRateInputs(carrier) {
+            let html = '';
+            
+            if (carrier.rates.domestic) {
+                // Sekcja stawek krajowych
+                html += `<div class="mt-4 p-4 border rounded-lg bg-slate-50">
+                    <h4 class="font-semibold text-sm text-slate-700 mb-2">Stawki krajowe</h4>`;
+                if (carrier.name === "APEK") {
+                    const kmRanges = Object.keys(carrier.rates.domestic.matrix);
+                    const pointsRanges = Object.keys(carrier.rates.domestic.matrix[kmRanges[0]]);
+                    
+                    html += `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-200">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Ilość KM</th>
+                                        ${pointsRanges.map(p => `<th class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">${p.replace(' punktów dostawy', '').replace('do ', 'do ').replace('powyżej ', 'pow. ').replace(' - ', '-')} pkt</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    ${kmRanges.map(km => `
+                                        <tr>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${km}</td>
+                                            ${pointsRanges.map(points => `
+                                                <td class="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
+                                                    <input type="number" step="any" data-carrier="${carrier.name}" data-rate-key="domestic.matrix.${km}.${points}" value="${carrier.rates.domestic.matrix[km][points]}"
+                                                        class="w-full border border-gray-300 rounded-md text-sm text-right px-2 py-1 focus:outline-none focus:ring-2 focus:ring-red-600">
+                                                </td>
+                                            `).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else if (carrier.name === "KJ TRANSPORT") {
+                    html += `
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label for="${carrier.name}-rate_per_point_up_to_200km" class="block text-sm font-medium text-slate-700 mb-1">Stawka za punkt (do 200km)</label>
+                                <input type="number" step="any" id="${carrier.name}-rate_per_point_up_to_200km" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:ring-1 focus:ring-red-600" value="${carrier.rates.domestic.rate_per_point_up_to_200km}" data-carrier="${carrier.name}" data-rate-key="domestic.rate_per_point_up_to_200km">
+                            </div>
+                            <div>
+                                <label for="${carrier.name}-rate_per_km_over_200km" class="block text-sm font-medium text-slate-700 mb-1">Stawka za km (powyżej 200km)</label>
+                                <input type="number" step="any" id="${carrier.name}-rate_per_km_over_200km" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:ring-1 focus:ring-red-600" value="${carrier.rates.domestic.rate_per_km_over_200km}" data-carrier="${carrier.name}" data-rate-key="domestic.rate_per_km_over_200km">
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="${carrier.name}-domestic_rate_per_km" class="block text-sm font-medium text-slate-700 mb-1">Stawka (zł/km)</label>
+                                <input type="number" step="any" id="${carrier.name}-domestic_rate_per_km" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:ring-1 focus:ring-red-600" value="${carrier.rates.domestic.rate_per_km}" data-carrier="${carrier.name}" data-rate-key="domestic.rate_per_km">
+                            </div>
+                            <div>
+                                <label for="${carrier.name}-domestic_rate_per_100km" class="block text-sm font-medium text-slate-700 mb-1">Stawka (zł/100km)</label>
+                                <input type="number" step="any" id="${carrier.name}-domestic_rate_per_100km" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:ring-1 focus:ring-red-600" value="${carrier.rates.domestic.rate_per_100km}" data-carrier="${carrier.name}" data-rate-key="domestic.rate_per_100km">
+                            </div>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+            }
+
+            if (carrier.rates.international) {
+                // Sekcja stawek zagranicznych
+                html += `<div class="mt-4 p-4 border rounded-lg bg-slate-50">
+                    <h4 class="font-semibold text-sm text-slate-700 mb-2">Stawki zagraniczne</h4>`;
+                
+                if (carrier.name === "APEK") {
+                    const kmRanges = Object.keys(carrier.rates.international.matrix);
+                    const pointsRanges = Object.keys(carrier.rates.international.matrix[kmRanges[0]]);
+                    
+                    html += `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-200">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Ilość KM</th>
+                                        ${pointsRanges.map(p => `<th class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">${p.replace(' punktów dostawy', '').replace('do ', 'do ').replace('powyżej ', 'pow. ').replace(' - ', '-')} pkt</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    ${kmRanges.map(km => `
+                                        <tr>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${km}</td>
+                                            ${pointsRanges.map(points => `
+                                                <td class="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
+                                                    <input type="number" step="any" data-carrier="${carrier.name}" data-rate-key="international.matrix.${km}.${points}" value="${carrier.rates.international.matrix[km][points]}"
+                                                        class="w-full border border-gray-300 rounded-md text-sm text-right px-2 py-1 focus:outline-none focus:ring-2 focus:ring-red-600">
+                                                </td>
+                                            `).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="${carrier.name}-international_rate_per_km" class="block text-sm font-medium text-slate-700 mb-1">Stawka (zł/km)</label>
+                                <input type="number" step="any" id="${carrier.name}-international_rate_per_km" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:ring-1 focus:ring-red-600" value="${carrier.rates.international.rate_per_km}" data-carrier="${carrier.name}" data-rate-key="international.rate_per_km">
+                            </div>
+                            <div>
+                                <label for="${carrier.name}-international_rate_per_100km" class="block text-sm font-medium text-slate-700 mb-1">Stawka (zł/100km)</label>
+                                <input type="number" step="any" id="${carrier.name}-international_rate_per_100km" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:ring-1 focus:ring-red-600" value="${carrier.rates.international.rate_per_100km}" data-carrier="${carrier.name}" data-rate-key="international.rate_per_100km">
+                            </div>
+                            <div>
+                                <label for="${carrier.name}-international_max_weight" class="block text-sm font-medium text-slate-700 mb-1">Maks. ładowność (kg)</label>
+                                <input type="number" step="1" id="${carrier.name}-international_max_weight" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:ring-1 focus:ring-red-600" value="${carrier.rates.international.maxWeight}" data-carrier="${carrier.name}" data-rate-key="international.maxWeight">
+                            </div>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+            }
+            return html;
+        }
+        
+        function renderSummary() {
+            summaryTableContainer.innerHTML = '';
+            let html = `
+                <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-300 rounded-lg overflow-hidden">
+                    <thead class="bg-slate-200">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Przewoźnik</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Ładowność (kg)</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Magazyny</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Stawki</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Dodatkowe opłaty</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-200">
+            `;
+            carriersData.forEach(carrier => {
+                let warehousesHtml = '<div class="flex flex-col space-y-1">';
+                allWarehouses.forEach(wh => {
+                    const isAvailable = carrier.warehouses.includes(wh);
+                    warehousesHtml += `
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm ${isAvailable ? 'text-red-600' : 'text-slate-300'}">
+                                ${isAvailable ? '✔' : '✕'}
+                            </span>
+                            <span class="ml-2 text-xs ${isAvailable ? 'text-slate-600' : 'text-slate-400'}">${wh}</span>
+                        </div>
+                    `;
+                });
+                warehousesHtml += '</div>';
+
+                let ratesHtml = '';
+                
+                if (carrier.rates.domestic) {
+                    ratesHtml += `<p class="text-sm font-medium text-slate-800">Krajowe:</p>`;
+                    if (carrier.name === "APEK") {
+                        ratesHtml += `<p class="text-xs text-slate-600">Stawki macierzowe (KM x Punkty)</p>`;
+                        ratesHtml += `<p class="text-xs text-slate-600 mt-1">Ładowność: ${carrier.rates.domestic.maxWeight} kg</p>`;
+                    } else if (carrier.rates.domestic.rate_per_km) {
+                        ratesHtml += `<p class="text-xs text-slate-600">Stawka: ${carrier.rates.domestic.rate_per_km} zł/km</p>`;
+                    } else if (carrier.name === "KJ TRANSPORT") {
+                        ratesHtml += `<div class="text-xs text-slate-600 space-y-1">`;
+                        ratesHtml += `<p>• Do 200 km: ${carrier.rates.domestic.rate_per_point_up_to_200km} zł/punkt</p>`;
+                        ratesHtml += `<p>• Powyżej 200 km: ${carrier.rates.domestic.rate_per_km_over_200km} zł/km</p>`;
+                        ratesHtml += `</div>`;
+                    }
+                    if (carrier.rates.domestic.rate_per_100km > 0) {
+                        ratesHtml += `<p class="text-xs text-slate-600 mt-1">Opłata dodatkowa: ${carrier.rates.domestic.rate_per_100km} zł/100km</p>`;
+                    }
+                }
+
+                if (carrier.rates.international) {
+                    ratesHtml += `<p class="text-sm font-medium text-slate-800 mt-2">Zagraniczne:</p>`;
+                    if (carrier.name === "APEK") {
+                        ratesHtml += `<p class="text-xs text-slate-600">Stawki macierzowe (KM x Punkty)</p>`;
+                        ratesHtml += `<p class="text-xs text-slate-600 mt-1">Ładowność: ${carrier.rates.international.maxWeight} kg</p>`;
+                    } else {
+                        ratesHtml += `<div class="text-xs text-slate-600 space-y-1">`;
+                        ratesHtml += `<p>• Stawka: ${carrier.rates.international.rate_per_km} zł/km</p>`;
+                        if (carrier.rates.international.rate_per_100km > 0) {
+                            ratesHtml += `<p>• Opłata dodatkowa: ${carrier.rates.international.rate_per_100km} zł/100km</p>`;
+                        }
+                        ratesHtml += `<p>• Ładowność: ${carrier.rates.international.maxWeight} kg</p>`;
+                        ratesHtml += `</div>`;
+                    }
+                } else {
+                    ratesHtml += `<p class="text-xs text-slate-400 mt-2">Brak stawek zagranicznych</p>`;
+                }
+
+                let surchargesHtml = '<div class="flex flex-col space-y-1">';
+                allWarehouses.forEach(wh => {
+                    const surcharge = carrier.warehouseSurcharges[wh];
+                    surchargesHtml += `
+                        <p class="text-xs text-slate-600">${surcharge > 0 ? `${wh}: ${surcharge} zł` : `${wh}: 0 zł`}</p>
+                    `;
+                });
+                surchargesHtml += '</div>';
+
+                html += `
+                    <tr>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">${carrier.name}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-slate-600">${carrier.maxWeight} kg</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">${warehousesHtml}</td>
+                        <td class="px-4 py-3">${ratesHtml}</td>
+                        <td class="px-4 py-3">${surchargesHtml}</td>
+                    </tr>
+                `;
+            });
+            html += `
+                    </tbody>
+                </table>
+                </div>
+            `;
+            summaryTableContainer.innerHTML = html;
+        }
+
+        calculateBtn.addEventListener('click', () => {
+            const points = parseInt(document.getElementById('points').value);
+            const weight = parseInt(document.getElementById('weight').value);
+            const distance = parseInt(document.getElementById('distance').value);
+            const warehouse = document.getElementById('warehouse').value;
+            const routeType = document.getElementById('route-type').value;
+
+            errorMessage.classList.add('hidden');
+            if (!points || !weight || !distance || points <= 0 || weight <= 0 || distance <= 0) {
+                errorMessage.textContent = 'Proszę wypełnić wszystkie pola poprawnymi wartościami (większymi od zera).';
+                errorMessage.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+
+            let results = [];
+            carriersData.forEach(carrier => {
+                let result = {
+                    name: carrier.name,
+                    cost: null,
+                    reason: '',
+                    details: []
+                };
+
+                if (!carrier.warehouses.includes(warehouse)) {
+                    result.reason = 'Nie obsługuje tego magazynu.';
+                } else {
+                    const calculation = calculateCost(carrier, points, weight, distance, routeType, warehouse);
+                    if (typeof calculation === 'object' && calculation.error) {
+                         result.reason = calculation.error;
+                    } else {
+                        result.cost = calculation.cost;
+                        result.details = calculation.details;
+                    }
+                }
+                results.push(result);
+            });
+            
+            const validResults = results.filter(r => r.cost !== null);
+            const minCost = validResults.length > 0 ? Math.min(...validResults.map(r => r.cost)) : null;
+
+            displayResults(results, minCost);
+        });
+
+        function displayResults(results, minCost) {
+            resultsList.innerHTML = ''; 
+            
+            if (results.every(r => r.cost === null)) {
+                 resultsList.innerHTML = `<div class="text-center p-6 bg-slate-100 rounded-lg">
+                    <p class="font-semibold text-slate-700">Nie znaleziono dostępnego przewoźnika dla podanych kryteriów.</p>
+                    <p class="text-sm text-slate-500 mt-1">Spróbuj zmienić wagę, trasę lub magazyn.</p>
+                 </div>`;
+            } else {
+                results.sort((a, b) => {
+                    if (a.cost === null) return 1;
+                    if (b.cost === null) return -1;
+                    return a.cost - b.cost;
+                });
+
+                results.forEach(result => {
+                    const isCheapest = result.cost !== null && result.cost === minCost;
+                    const cardClass = `border-2 p-4 rounded-xl transition ${isCheapest ? 'border-green-500 bg-green-50 shadow-md' : 'bg-slate-50 border-transparent'}`;
+                    
+                    let contentHTML = '';
+                    if (result.cost !== null) {
+                        contentHTML = `
+                            <div class="collapsible-header">
+                                <div class="flex-grow">
+                                    <h3 class="font-bold text-lg text-slate-800">${result.name}</h3>
+                                    ${isCheapest ? '<span class="text-xs font-bold text-green-600 bg-green-200 py-1 px-2 rounded-full">NAJTAŃSZA OPCJA</span>' : ''}
+                                </div>
+                                <div class="flex items-center">
+                                    <p class="text-xl md:text-2xl font-bold text-slate-900 mr-4">${result.cost.toFixed(2).replace('.', ',')} zł</p>
+                                    <svg class="arrow-icon w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="collapsible-content mt-4 p-4 border rounded-lg bg-white text-sm text-slate-700">
+                                <h4 class="font-semibold mb-2">Szczegóły kalkulacji:</h4>
+                                <ul class="list-disc list-inside space-y-1">
+                                    ${result.details.map(detail => `<li>${detail}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    } else {
+                        contentHTML = `
+                            <div class="flex justify-between items-center opacity-60">
+                                <div>
+                                    <h3 class="font-bold text-lg text-slate-600">${result.name}</h3>
+                                    <p class="text-sm text-slate-500">${result.reason}</p>
+                                </div>
+                                <p class="text-lg font-semibold text-slate-500">Niedostępny</p>
+                            </div>
+                        `;
+                    }
+                    
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = cardClass;
+                    resultDiv.innerHTML = contentHTML;
+                    resultsList.appendChild(resultDiv);
+                });
+                
+                // Set up new event listeners for collapsing results
+                document.querySelectorAll('#results-list .collapsible-header').forEach(header => {
+                    header.addEventListener('click', () => {
+                        const content = header.nextElementSibling;
+                        const arrow = header.querySelector('.arrow-icon');
+                        content.classList.toggle('open');
+                        arrow.classList.toggle('rotated');
+                    });
+                });
+            }
+            resultsContainer.classList.remove('hidden');
+        }
+
+        saveSettingsBtn.addEventListener('click', async () => {
+            const currentData = JSON.stringify(carriersData);
+            
+            const newData = JSON.parse(currentData);
+            const apek = newData.find(c => c.name === "APEK");
+
+            document.querySelectorAll('#settings-list .collapsible-content').forEach(content => {
+                const carrierName = content.querySelector('input').dataset.carrier;
+                const carrier = newData.find(c => c.name === carrierName);
+                if (!carrier) return;
+
+                // Update warehouses
+                const newWarehouses = [];
+                content.querySelectorAll('input[data-warehouse-checkbox]:checked').forEach(checkbox => {
+                    newWarehouses.push(checkbox.value);
+                });
+                carrier.warehouses = newWarehouses;
+
+                // Update rates
+                content.querySelectorAll('input[data-rate-key]').forEach(input => {
+                    const rateKey = input.dataset.rateKey;
+                    const newValue = parseFloat(input.value);
+                    if (!isNaN(newValue)) {
+                        const keys = rateKey.split('.');
+                        let currentRate = carrier.rates;
+                        for (let i = 0; i < keys.length - 1; i++) {
+                            if (!currentRate[keys[i]]) currentRate[keys[i]] = {};
+                            currentRate = currentRate[keys[i]];
+                        }
+                        currentRate[keys[keys.length - 1]] = newValue;
+                    }
+                });
+
+                // Update surcharges
+                allWarehouses.forEach(wh => {
+                    const input = content.querySelector(`input[data-surcharge-key="${wh}"]`);
+                    if (input) {
+                        const newValue = parseFloat(input.value);
+                        if (!isNaN(newValue)) {
+                            carrier.warehouseSurcharges[wh] = newValue;
+                        }
+                    }
+                });
+            });
+
+            if (JSON.stringify(newData) !== currentData) {
+                await saveData(newData);
+                await loadData(); // Reload data from server after save
+                renderSettings();
+                renderSummary(); // Rerender summary to reflect changes
+            } else {
+                showNotification("Nie wprowadzono żadnych zmian do zapisania.", "info");
+            }
+        });
+
+        resetSettingsBtn.addEventListener('click', async () => {
+            await saveData(defaultCarriersData);
+            await loadData();
+            renderSettings();
+            renderSummary();
+            showNotification("Stawki zostały przywrócone do domyślnych.", "success");
+        });
+        
+        async function initialize() {
+            // Fetch the default data from the server for reset purposes
+            try {
+                const response = await fetch('/carriers.json');
+                defaultCarriersData = await response.json();
+            } catch (error) {
+                console.error("Failed to load default data from server.", error);
+            }
+            // Load the current data from the API
+            await loadData();
+            // Render the UI
+            renderSettings();
+            renderSummary();
+        }
+        
+        initialize();
+    </script>
+</body>
+</html>
