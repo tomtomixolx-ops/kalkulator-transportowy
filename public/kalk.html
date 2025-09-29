@@ -160,8 +160,6 @@
                     <div id="settings-list" class="space-y-6">
                     </div>
                     <div class="mt-8 flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4">
-                        <button id="reset-settings-btn" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors shadow-md hover:shadow-lg">Resetuj do domyślnych</button>
-                        <button id="save-settings-btn" class="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors shadow-md hover:shadow-lg">Zapisz Zmiany</button>
                     </div>
                 </div>
             </div>
@@ -204,24 +202,6 @@
             }
         }
 
-        async function saveData(data) {
-            try {
-                const response = await fetch('/api/carriers', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                showNotification("Dane zostały zapisane!", "success");
-            } catch (error) {
-                console.error('Błąd podczas zapisywania danych na serwerze:', error);
-                showNotification("Błąd podczas zapisu danych na serwerze.", "info");
-            }
-        }
 
         // Pozostałe funkcje kalkulatora (z Twojego pliku)
 
@@ -387,8 +367,6 @@
         const resultsList = document.getElementById('results-list');
         const errorMessage = document.getElementById('error-message');
         const settingsList = document.getElementById('settings-list');
-        const saveSettingsBtn = document.getElementById('save-settings-btn');
-        const resetSettingsBtn = document.getElementById('reset-settings-btn');
         const summaryTableContainer = document.getElementById('summary-table-container');
         const notificationElement = document.getElementById('notification');
         
@@ -810,7 +788,6 @@
             resultsContainer.classList.remove('hidden');
         }
 
-        saveSettingsBtn.addEventListener('click', async () => {
             const currentData = JSON.stringify(carriersData);
             
             const newData = JSON.parse(currentData);
@@ -865,7 +842,6 @@
             }
         });
 
-        resetSettingsBtn.addEventListener('click', async () => {
             await saveData(defaultCarriersData);
             await loadData();
             renderSettings();
