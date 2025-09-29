@@ -1,133 +1,17 @@
 [
   {
-    "name": "SPEDPOL",
-    "maxWeight": 1500,
-    "warehouses": ["OPOLE", "RUDA ŚLĄSKA", "BYDGOSZCZ", "CZECHOWICE DZIEDZICE"],
-    "rates": {
-      "domestic": {
-        "rate_per_km": 1.20,
-        "rate_per_100km": 0
-      },
-      "international": {
-        "rate_per_km": 1.80,
-        "rate_per_100km": 5,
-        "maxWeight": 1500
-      }
-    },
-    "warehouseSurcharges": {
-      "OPOLE": 0,
-      "RUDA ŚLĄSKA": 100,
-      "BYDGOSZCZ": 150,
-      "CZECHOWICE DZIEDZICE": 120
-    }
-  },
-  {
-    "name": "TRANS-CAR",
-    "maxWeight": 1000,
-    "warehouses": ["OPOLE", "RUDA ŚLĄSKA", "BYDGOSZCZ", "CZECHOWICE DZIEDZICE"],
+    "name": "TEST-SPED",
+    "maxWeight": 2000,
+    "warehouses": ["OPOLE", "RUDA ŚLĄSKA"],
     "rates": {
       "domestic": {
         "rate_per_km": 1.50,
-        "rate_per_100km": 10
+        "rate_per_100km": 0
       }
     },
     "warehouseSurcharges": {
       "OPOLE": 0,
-      "RUDA ŚLĄSKA": 0,
-      "BYDGOSZCZ": 0,
-      "CZECHOWICE DZIEDZICE": 0
-    }
-  },
-  {
-    "name": "APEK",
-    "maxWeight": 1200,
-    "warehouses": ["OPOLE", "RUDA ŚLĄSKA", "BYDGOSZCZ", "CZECHOWICE DZIEDZICE"],
-    "rates": {
-      "domestic": {
-        "maxWeight": 1200,
-        "matrix": {
-          "do 200 KM": {
-            "do 10 punktów dostawy": 250,
-            "11 - 15 punktów dostawy": 280,
-            "16 - 20 punktów dostawy": 320,
-            "powyżej 20 punktów dostawy": 350
-          },
-          "201 - 300 KM": {
-            "do 10 punktów dostawy": 300,
-            "11 - 15 punktów dostawy": 350,
-            "16 - 20 punktów dostawy": 400,
-            "powyżej 20 punktów dostawy": 450
-          },
-          "301 - 400 KM": {
-            "do 10 punktów dostawy": 350,
-            "11 - 15 punktów dostawy": 400,
-            "16 - 20 punktów dostawy": 450,
-            "powyżej 20 punktów dostawy": 500
-          },
-          "401 - 500 KM": {
-            "do 10 punktów dostawy": 450,
-            "11 - 15 punktów dostawy": 500,
-            "16 - 20 punktów dostawy": 550,
-            "powyżej 20 punktów dostawy": 600
-          },
-          "501 - 600 KM": {
-            "do 10 punktów dostawy": 500,
-            "11 - 15 punktów dostawy": 550,
-            "16 - 20 punktów dostawy": 600,
-            "powyżej 20 punktów dostawy": 650
-          },
-          "powyżej 600 KM": {
-            "do 10 punktów dostawy": 600,
-            "11 - 15 punktów dostawy": 650,
-            "16 - 20 punktów dostawy": 700,
-            "powyżej 20 punktów dostawy": 750
-          }
-        }
-      },
-      "international": {
-        "maxWeight": 1000,
-        "matrix": {
-          "do 200 KM": {
-            "do 10 punktów dostawy": 400,
-            "11 - 15 punktów dostawy": 450,
-            "16 - 20 punktów dostawy": 500,
-            "powyżej 20 punktów dostawy": 550
-          },
-          "201 - 300 KM": {
-            "do 10 punktów dostawy": 480,
-            "11 - 15 punktów dostawy": 520,
-            "16 - 20 punktów dostawy": 570,
-            "powyżej 20 punktów dostawy": 620
-          },
-          "powyżej 300 KM": {
-            "do 10 punktów dostawy": 600,
-            "11 - 15 punktów dostawy": 650,
-            "16 - 20 punktów dostawy": 700,
-            "powyżej 20 punktów dostawy": 750
-          }
-        }
-      }
-    },
-    "warehouseSurcharges": {
-      "OPOLE": 0,
-      "RUDA ŚLĄSKA": 0,
-      "BYDGOSZCZ": 0,
-      "CZECHOWICE DZIEDZICE": 0
-    }
-  },
-  {
-    "name": "KJ TRANSPORT",
-    "maxWeight": 2500,
-    "warehouses": ["RUDA ŚLĄSKA", "CZECHOWICE DZIEDZICE"],
-    "rates": {
-      "domestic": {
-        "rate_per_point_up_to_200km": 25,
-        "rate_per_km_over_200km": 1.25
-      }
-    },
-    "warehouseSurcharges": {
-      "OPOLE": 0,
-      "RUDA ŚLĄSKA": 0,
+      "RUDA ŚLĄSKA": 50,
       "BYDGOSZCZ": 0,
       "CZECHOWICE DZIEDZICE": 0
     }
